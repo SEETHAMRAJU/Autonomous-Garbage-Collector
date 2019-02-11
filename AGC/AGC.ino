@@ -16,7 +16,7 @@ int motors[] = {8, 9, 10, 11}; //pwm pins
 int dir[] = {40, 41, 42, 43};
 
 //steppers
-int arm_step_delay = 800;
+int arm_step_delay = 300;
 int base_step_delay = 300;
 int base_stepper_pul = 33;
 int base_stepper_ena = 31;
@@ -181,9 +181,9 @@ void base_stepper_move(int steps, int dir){
     delayMicroseconds(base_step_delay);
   }
 }
-void arm_stepper_move(int steps, int dir){
+void arm_stepper_move(long int steps, int dir){
   digitalWrite(arm_stepper_dir,dir);
-  for(int i = 0; i < steps; i++)
+  for(long int i = 0; i < steps; i++)
   {
     //Serial.println(i);
     digitalWrite(arm_stepper_pul,HIGH);
@@ -207,13 +207,19 @@ void picK()
   //base_stepper_move(,);
   base_stepper_stop();
 
-  arm_stepper_move(8000,0);
+  arm_stepper_move(36000,0);
   arm_stepper_stop();
 
   
   servo.write(45, 10);
   delay(4000);
 
-  arm_stepper_move(8000,1);
+  arm_stepper_move(30000,1);
+  arm_stepper_stop();
+
+  servo.write(0, 80);
+  delay(2000);
+
+  arm_stepper_move(6000,1);
   arm_stepper_stop();
 }
