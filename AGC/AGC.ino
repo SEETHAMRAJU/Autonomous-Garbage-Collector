@@ -29,6 +29,7 @@ int arm_stepper_dir = 35;
 int frontUStrig = 3;
 int frontUSecho = 4;
 
+String incomingB = "";
 
 void setup() {
   // put your setup code here, to run once:
@@ -65,9 +66,21 @@ void loop() {
 //  if(confirmation()) picK();
 //  movE();
 //  picK();
+  if(Serial.available()>0)
+  {
+      incomingB = Serial.readString();
+      if(incomingB.equals("y"))
+      {
+        moveFront(10);
+        delay(0);
+      }
 
-  moveFront(10);
-  delay(500);
+      else
+      {
+          Vstop();
+      }
+  }
+
   /*
   int spd = 130;
   moveFront(spd);
