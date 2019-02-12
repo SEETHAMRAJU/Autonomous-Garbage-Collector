@@ -5,12 +5,16 @@ blue = [110, 50, 50] to [130,255,255]
 import numpy as np
 import cv2
 
-import serial
+#import serial
 import time
 
-ser = serial.Serial('/dev/ttyACM0',19200)
+#ser = serial.Serial('/dev/ttyACM0',19200)
 
 #Function for converting co ordinates to 3 digit strings
+def check(x,y,h,w):
+    if(x>=290 and x <= 310 and y>=267 and y<=287 and h >= 274 and h<=294 and w>= 147 and w<=167):
+        return "1"
+    return "0"
 def process(x,y):
 	x = str(x)
 	y = str(y)
@@ -45,8 +49,8 @@ center_y = 0
 while(True):
 	_,im = cap.read()
 	hsv_img = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
-	COLOR_MIN = np.array(colors["all"][0],np.uint8)
-	COLOR_MAX = np.array(colors["all"][1],np.uint8)
+	COLOR_MIN = np.array(colors["yellow"][0],np.uint8)
+	COLOR_MAX = np.array(colors["yellow"][1],np.uint8)
 	frame_threshed = cv2.inRange(hsv_img, COLOR_MIN, COLOR_MAX)
 	imgray = frame_threshed
 	ret,thresh = cv2.threshold(frame_threshed,127,255,0)
@@ -60,10 +64,11 @@ while(True):
 		cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),2)
 	        center_x = (x+(w/2))
                 center_y = (y+(h/2))
-                print process(center_x, center_y)
-                ser.write(process(center_x,center_y)) 
-                time.sleep(1)               
-				#f.write(process(center_x,center_y))          #              ***
+                print process(center_x, center_y) + " "+ str(h) + " " + str(w)
+                print check(center_x,center_y,h,w)
+                #ser.write(check(center_x,center_y,h,w)) 
+                time.sleep(0.5)               
+		#f.write(process(center_x,center_y))          #              ***
                 cv2.imshow("Show",im)
 	cv2.waitKey(10)
 cv2.destroyAllWindows()
