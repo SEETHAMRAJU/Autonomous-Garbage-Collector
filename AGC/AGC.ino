@@ -65,18 +65,13 @@ void loop() {
 //  if(confirmation()) picK();
 //  movE();
 //  picK();
-  moveFront(180);
-  delay(4000);
-  moveBack(180);
-  delay(4000);
-  moveRight(180);
-  delay(4000);
-  moveLeft(180);
-  delay(4000);
+
+  moveFront(10);
+  delay(500);
   /*
   int spd = 130;
   moveFront(spd);
-  
+
   delay(400);
   moveBack(spd);
   delay(400);
@@ -94,91 +89,103 @@ void Vstop(){
   analogWrite(motors[1], 0);
   analogWrite(motors[2], 0);
   analogWrite(motors[3], 0);
-  delay(80);
+  delay(90);
 }
 
-void moveFront(int s){
+void moveFront(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], LOW);
   digitalWrite(dir[1], LOW);
   digitalWrite(dir[2], LOW);
   digitalWrite(dir[3], LOW);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
   Vstop();
+    }
 }
 
-void moveBack(int s){
+void moveBack(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], HIGH);
   digitalWrite(dir[1], HIGH);
   digitalWrite(dir[2], HIGH);
   digitalWrite(dir[3], HIGH);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
   Vstop();
+    }
 }
 
-void moveLeft(int s){
+void moveLeft(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], HIGH);
   digitalWrite(dir[1], LOW);
   digitalWrite(dir[2], LOW);
   digitalWrite(dir[3], HIGH);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
   Vstop();
+    }
 }
 
-void moveRight(int s){
+void moveRight(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], LOW); //bakward
   digitalWrite(dir[1], HIGH);
   digitalWrite(dir[2], HIGH);
   digitalWrite(dir[3], LOW);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
   Vstop();
+    }
 }
 
-void turnRight(int s){
+void turnRight(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], LOW); //bakward
   digitalWrite(dir[1], HIGH);
   digitalWrite(dir[2], LOW);
   digitalWrite(dir[3], HIGH);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
   Vstop();
+    }
 }
 
-void turnLeft(int s){
+void turnLeft(int steps){
+    for(int i = 0; i < steps; i++){
   digitalWrite(dir[0], HIGH); //bakward
   digitalWrite(dir[1], LOW);
   digitalWrite(dir[2], HIGH);
   digitalWrite(dir[3], LOW);
 
-  analogWrite(motors[0], s);
-  analogWrite(motors[1], s);
-  analogWrite(motors[2], s);
-  analogWrite(motors[3], s);
-  delay(50);
-  Vstop();  
+  analogWrite(motors[0], 180);
+  analogWrite(motors[1], 180);
+  analogWrite(motors[2], 180);
+  analogWrite(motors[3], 180);
+  delay(10);
+  Vstop();
+    }
 }
 
 void base_stepper_move(int steps, int dir){
@@ -249,7 +256,7 @@ void picK()
   arm_stepper_move(36000,0);
   arm_stepper_stop();
 
-  
+
   servo.write(45, 10);
   delay(4000);
 
@@ -286,7 +293,7 @@ void movE()
     if(!confirmation())
     {
       moveFront(150);
-//      delay(50);
+//      delayMicroseconds(500);
 //      Vstop();
       i+=1;
     }
