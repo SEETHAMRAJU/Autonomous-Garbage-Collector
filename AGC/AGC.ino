@@ -14,6 +14,7 @@ VarSpeedServo servo;
 // base motors
 int motors[] = {8, 9, 10, 11}; //pwm pins
 int dir[] = {40, 41, 42, 43};
+int led = 6;
 
 //steppers
 int arm_step_delay = 300;
@@ -25,20 +26,24 @@ int arm_stepper_pul = 36;
 int arm_stepper_ena = 34;
 int arm_stepper_dir = 35;
 
-int USS_front;
-int USS_back;
-int USS_left;
-int USS_right;
+int frontUStrig = 3;
+int frontUSecho = 4;
 
 
 void setup() {
   // put your setup code here, to run once:
+  Serial.begin(9600);
   pinMode(base_stepper_pul,OUTPUT);
   pinMode(base_stepper_ena,OUTPUT);
   pinMode(base_stepper_dir,OUTPUT);
   pinMode(arm_stepper_pul,OUTPUT);
   pinMode(arm_stepper_ena,OUTPUT);
   pinMode(arm_stepper_dir,OUTPUT);
+
+  pinMode(led, OUTPUT);
+  digitalWrite(led, LOW);
+  pinMode(frontUStrig, OUTPUT);
+  pinMode(frontUSecho, INPUT);
 
   digitalWrite(arm_stepper_ena, HIGH);
   digitalWrite(base_stepper_ena, HIGH);
@@ -51,19 +56,24 @@ void setup() {
     pinMode(motors[i], OUTPUT);
     pinMode(dir[i], OUTPUT);
   }
-  delay(2500);
+  delay(3500);
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
-  picK();
-
-  
+//  if(confirmation()) picK();
+//  movE();
+//  picK();
+  moveFront(180);
+  delay(4000);
+  moveBack(180);
+  delay(4000);
+  moveRight(180);
+  delay(4000);
+  moveLeft(180);
+  delay(4000);
   /*
-  arm_stepper_move(3000, 1);
-  base_stepper_move(3000, 1);
-  
   int spd = 130;
   moveFront(spd);
   
@@ -79,7 +89,7 @@ void loop() {
 
 
 
-void stop(){
+void Vstop(){
   analogWrite(motors[0], 0);
   analogWrite(motors[1], 0);
   analogWrite(motors[2], 0);
@@ -98,7 +108,7 @@ void moveFront(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();
+  Vstop();
 }
 
 void moveBack(int s){
@@ -112,7 +122,7 @@ void moveBack(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();
+  Vstop();
 }
 
 void moveLeft(int s){
@@ -126,7 +136,7 @@ void moveLeft(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();
+  Vstop();
 }
 
 void moveRight(int s){
@@ -140,7 +150,7 @@ void moveRight(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();
+  Vstop();
 }
 
 void turnRight(int s){
@@ -154,7 +164,7 @@ void turnRight(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();
+  Vstop();
 }
 
 void turnLeft(int s){
@@ -168,7 +178,7 @@ void turnLeft(int s){
   analogWrite(motors[2], s);
   analogWrite(motors[3], s);
   delay(50);
-  stop();  
+  Vstop();  
 }
 
 void base_stepper_move(int steps, int dir){
@@ -200,8 +210,37 @@ void arm_stepper_stop(){
 }
 
 
+int checkObject(){
+    int t, dis;
+  digitalWrite(frontUStrig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(frontUStrig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(frontUStrig, LOW);
+
+  t = pulseIn(frontUSecho, HIGH);
+  dis = t*0.034/2;
+
+  return dis;
+}
+
+int confirmation(){
+  int cnt;
+  for(int i = 0; i < 10; i++){
+    int dis = checkObject();
+    Serial.println(dis);
+    if(dis <= 22 && dis >= 16){
+      cnt++;
+    }
+    delay(100);
+  }
+  if(cnt > 4) return 1;
+  else return 0;
+}
+
 void picK()
 {
+  digitalWrite(led, HIGH);
   servo.write(0, 80);
   delay(2000);
   //base_stepper_move(,);
@@ -222,4 +261,41 @@ void picK()
 
   arm_stepper_move(6000,1);
   arm_stepper_stop();
+  digitalWrite(led, LOW);
+}
+
+
+void movE()
+{
+  int lol = checkObject();
+  delay(500);
+  Serial.println("#" + lol);
+  if(lol>50)
+  {
+    moveFront(155);
+//    delay(500);
+//    Vstop();
+  }
+
+  else
+  {
+   Vstop();
+   int i =0;
+   while(i>=0)
+   {
+    if(!confirmation())
+    {
+      moveFront(150);
+//      delay(50);
+//      Vstop();
+      i+=1;
+    }
+
+    else
+    {
+      i=-1;
+      picK();
+    }
+  }
+}
 }
