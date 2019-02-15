@@ -281,32 +281,38 @@ int confirmation(){
   else return 0;
 }
 
+
 void picK()
 {
   digitalWrite(led1, HIGH);
   servo.write(0, 80);
   delay(2000);
-  //base_stepper_move(,);
+  arm_stepper_stop();
+  base_stepper_stop();
+  delay(500);
+  base_stepper_move(10000,1);
   base_stepper_stop();
 
-  arm_stepper_move(36000,0);
+  arm_stepper_move(32000,0);  //36000
   arm_stepper_stop();
 
-
-  servo.write(45, 10);
+  servo.write(38, 20);
   delay(4000);
 
-  arm_stepper_move(30000,1);
+  base_stepper_move(10000,0);
+  base_stepper_stop();
+  
+  arm_stepper_move(27000,1); //30000
   arm_stepper_stop();
 
   servo.write(0, 80);
   delay(2000);
 
-  arm_stepper_move(6000,1);
+  arm_stepper_move(5000,1);
   arm_stepper_stop();
   digitalWrite(led1, LOW);
+  
 }
-
 
 void movE()
 {
